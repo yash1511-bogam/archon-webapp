@@ -1,4 +1,4 @@
-import { Heading, Text, Section, CodeInline } from "@react-email/components";
+import { Heading, Text, Section } from "@react-email/components";
 import * as React from "react";
 import { EmailLayout } from "./layout";
 
@@ -15,7 +15,7 @@ export function ApiKeyCreatedEmail({ name, keyName, prefix, scopes }: { name: st
         <Text className="text-[#a1a1aa] text-xs m-0">SCOPES</Text>
         <Text className="text-[#10b981] text-sm font-mono mt-1 mb-0">{scopes.join(", ")}</Text>
       </Section>
-      <Text className="text-[#71717a] text-xs">If you didn't create this key, revoke it immediately in the dashboard.</Text>
+      <Text className="text-[#71717a] text-xs">If you did not create this key, revoke it immediately in the dashboard.</Text>
     </EmailLayout>
   );
 }

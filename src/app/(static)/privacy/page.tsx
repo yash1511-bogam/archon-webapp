@@ -11,10 +11,10 @@ export default function PrivacyPage() {
       <h2>1. Information We Collect</h2>
       <p><strong>Account data:</strong> Name, email address, and authentication provider information (via Clerk).</p>
       <p><strong>Usage data:</strong> Agent execution traces, model usage, token counts, cost metrics, and API call metadata submitted through the SDK.</p>
-      <p><strong>API keys:</strong> Stored as irreversible SHA-256 hashes. We never store or have access to your plain-text API keys after creation.</p>
+      <p><strong>API keys:</strong> Stored as irreversible SHA-256 hashes. We never store or have access to your plain&hyphen;text API keys after creation.</p>
 
       <h2>2. How We Use Your Data</h2>
-      <p>We use your data to: (a) provide the dashboard analytics and trace viewer; (b) enforce budget limits; (c) send email notifications you've opted into; (d) improve the Service.</p>
+      <p>We use your data to: (a) provide the dashboard analytics and trace viewer; (b) enforce budget limits; (c) send email notifications you have opted into; (d) improve the Service.</p>
 
       <h2>3. Data Storage</h2>
       <p>Data is stored in Convex (real-time database) with encryption at rest. Authentication is handled by Clerk with industry-standard security practices. All data is scoped per user — enforced at the database query level.</p>

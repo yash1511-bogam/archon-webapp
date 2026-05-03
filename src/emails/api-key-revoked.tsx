@@ -11,7 +11,7 @@ export function ApiKeyRevokedEmail({ name, keyName, prefix }: { name: string; ke
         <Text className="text-[#a1a1aa] text-xs m-0">KEY</Text>
         <Text className="text-white text-sm font-mono mt-1 mb-0">{keyName} ({prefix}••••)</Text>
       </Section>
-      <Text className="text-[#71717a] text-xs">If this wasn't you, secure your account immediately.</Text>
+      <Text className="text-[#71717a] text-xs">If this was not you, secure your account immediately.</Text>
     </EmailLayout>
   );
 }

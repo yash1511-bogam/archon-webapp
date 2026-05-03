@@ -1,4 +1,4 @@
-import { Body, Container, Head, Hr, Html, Img, Preview, Section, Tailwind, Text } from "@react-email/components";
+import { Body, Container, Head, Hr, Html, Preview, Tailwind, Text } from "@react-email/components";
 import * as React from "react";
 
 export function EmailLayout({ preview, children }: { preview: string; children: React.ReactNode }) {

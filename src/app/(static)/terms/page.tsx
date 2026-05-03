@@ -9,7 +9,7 @@ export default function TermsPage() {
       <p className="text-muted">Last updated: May 2026</p>
 
       <h2>1. Acceptance of Terms</h2>
-      <p>By accessing or using Archon ("Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
+      <p>By accessing or using Archon (&ldquo;Service&rdquo;), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
 
       <h2>2. Description of Service</h2>
       <p>Archon provides a production harness for AI agents, including cost control, security, observability, memory management, evaluation, and governance tools. The Service includes the Archon SDK (Python and TypeScript), the web dashboard, and associated APIs.</p>
@@ -30,13 +30,13 @@ export default function TermsPage() {
       <p>Budget limits set through the SDK are enforced as hard stops. Archon is not responsible for costs incurred through third-party LLM providers. You are responsible for configuring appropriate budget limits.</p>
 
       <h2>8. Service Availability</h2>
-      <p>We strive for high availability but do not guarantee uninterrupted service. The Service is provided "as is" without warranties of any kind.</p>
+      <p>We strive for high availability but do not guarantee uninterrupted service. The Service is provided &ldquo;as is&rdquo; without warranties of any kind.</p>
 
       <h2>9. Limitation of Liability</h2>
       <p>Archon shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Service, including but not limited to LLM costs, data loss, or business interruption.</p>
 
       <h2>10. Open Source</h2>
-      <p>The Archon SDK is licensed under Apache-2.0. The web dashboard and cloud services are proprietary. Contributions to the open-source components are governed by the project's contributor agreement.</p>
+      <p>The Archon SDK is licensed under Apache-2.0. The web dashboard and cloud services are proprietary. Contributions to the open-source components are governed by the project&apos;s contributor agreement.</p>
 
       <h2>11. Modifications</h2>
       <p>We may update these Terms at any time. Continued use of the Service after changes constitutes acceptance. Material changes will be communicated via email.</p>
