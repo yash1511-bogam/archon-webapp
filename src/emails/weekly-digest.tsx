@@ -29,7 +29,7 @@ export function WeeklyDigestEmail({ name, totalRuns, totalCost, totalTokens, top
         <Text className="text-[#a1a1aa] text-xs m-0">TOP MODEL</Text>
         <Text className="text-white text-sm font-mono mt-1 mb-0">{topModel}</Text>
       </Section>
-      <Button href="https://archon.dev/dashboard/analytics" className="bg-[#10b981] text-black font-semibold text-sm px-5 py-3 rounded-lg">
+      <Button href="https://archon.yashbogam.me/dashboard/analytics" className="bg-[#10b981] text-black font-semibold text-sm px-5 py-3 rounded-lg">
         View full analytics →
       </Button>
     </EmailLayout>

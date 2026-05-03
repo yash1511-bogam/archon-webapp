@@ -23,11 +23,11 @@ http.route({
   handler: httpAction(async (ctx, req) => {
     const auth = req.headers.get("Authorization");
     if (!auth?.startsWith("Bearer "))
-      return json({ valid: false, error: "Missing API key. Set ARCHON_API_KEY environment variable.\n\n  export ARCHON_API_KEY=\"arc_your_key_here\"\n\nGenerate a key at: https://archon.dev/dashboard/api-keys" }, 401);
+      return json({ valid: false, error: "Missing API key. Set ARCHON_API_KEY environment variable.\n\n  export ARCHON_API_KEY=\"arc_your_key_here\"\n\nGenerate a key at: https://archon.yashbogam.me/dashboard/api-keys" }, 401);
 
     const keyHash = await sha256(auth.slice(7));
     const result = await ctx.runQuery(internal.functions.validateKey, { keyHash });
-    if (!result) return json({ valid: false, error: "Invalid API key. The key does not exist or was deleted.\n\nGenerate a new key at: https://archon.dev/dashboard/api-keys" }, 401);
+    if (!result) return json({ valid: false, error: "Invalid API key. The key does not exist or was deleted.\n\nGenerate a new key at: https://archon.yashbogam.me/dashboard/api-keys" }, 401);
     if (!result.valid) return json({ valid: false, error: result.error }, 403);
     return json({ valid: true, scopes: result.scopes, expiresAt: result.expiresAt ?? null }, 200);
   }),
@@ -47,7 +47,7 @@ http.route({
     if (!keyData) return json({ ok: false, error: "Invalid API key." }, 401);
     if (!keyData.valid) return json({ ok: false, error: keyData.error }, 403);
     if (!keyData.scopes.includes("runs:write"))
-      return json({ ok: false, error: "API key missing 'runs:write' scope. Update key scopes at: https://archon.dev/dashboard/api-keys" }, 403);
+      return json({ ok: false, error: "API key missing 'runs:write' scope. Update key scopes at: https://archon.yashbogam.me/dashboard/api-keys" }, 403);
 
     let body;
     try { body = await req.json(); } catch { return json({ ok: false, error: "Invalid JSON body." }, 400); }

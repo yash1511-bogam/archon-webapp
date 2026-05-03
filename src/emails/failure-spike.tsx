@@ -15,7 +15,7 @@ export function FailureSpikeEmail({ name, failureRate, agent, window }: { name: 
         <Text className="text-[#a1a1aa] text-xs m-0">WINDOW</Text>
         <Text className="text-white text-sm mt-1 mb-0">{window}</Text>
       </Section>
-      <Button href="https://archon.dev/dashboard/traces" className="bg-[#10b981] text-black font-semibold text-sm px-5 py-3 rounded-lg">
+      <Button href="https://archon.yashbogam.me/dashboard/traces" className="bg-[#10b981] text-black font-semibold text-sm px-5 py-3 rounded-lg">
         View traces →
       </Button>
     </EmailLayout>

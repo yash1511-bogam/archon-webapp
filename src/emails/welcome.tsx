@@ -15,7 +15,7 @@ export function WelcomeEmail({ name }: { name: string }) {
         <Text className="text-[#a1a1aa] text-sm m-0">2. Install the SDK: <CodeInline className="text-[#10b981] bg-[#1f1f2a] px-1 rounded">pip install archon-framework</CodeInline></Text>
         <Text className="text-[#a1a1aa] text-sm m-0">3. Set <CodeInline className="text-[#10b981] bg-[#1f1f2a] px-1 rounded">ARCHON_API_KEY</CodeInline> and run your first agent</Text>
       </Section>
-      <Button href="https://archon.dev/dashboard/api-keys" className="bg-[#10b981] text-black font-semibold text-sm px-5 py-3 rounded-lg">
+      <Button href="https://archon.yashbogam.me/dashboard/api-keys" className="bg-[#10b981] text-black font-semibold text-sm px-5 py-3 rounded-lg">
         Create your first API key →
       </Button>
     </EmailLayout>

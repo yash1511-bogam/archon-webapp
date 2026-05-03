@@ -13,7 +13,7 @@ export async function sendEmail({ to, subject, template }: { to: string; subject
   const html = await render(template);
   const text = await render(template, { plainText: true });
   return transporter.sendMail({
-    from: '"Archon" <noreply@efficientai.in>',
+    from: '"Archon" <noreply@archon.yashbogam.me>',
     replyTo: "hello@yashbogam.me",
     to,
     subject,
