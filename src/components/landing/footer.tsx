@@ -25,7 +25,7 @@ const GROUPS = [
       { label: "Blog", href: "#" },
       { label: "Changelog", href: "#" },
       { label: "Security", href: "#" },
-      { label: "Contact", href: "#" },
+      { label: "Contact", href: "mailto:hello@yashbogam.me" },
     ],
   },
 ];
@@ -83,9 +83,11 @@ export function Footer() {
             © {new Date().getFullYear()} Archon. Apache-2.0 License.
           </div>
           <div className="flex items-center gap-6 font-mono text-xs text-subtle">
-            <span>v1.0.0</span>
+            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
+            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+            <a href="mailto:hello@yashbogam.me" className="hover:text-foreground transition-colors">Support</a>
             <span className="opacity-40">•</span>
-            <span>128 tests passing</span>
+            <span>v1.0.0</span>
           </div>
         </div>
       </div>

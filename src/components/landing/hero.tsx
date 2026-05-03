@@ -230,13 +230,13 @@ function Signal({ label }: { label: string }) {
 function BackgroundOrbs() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <div className="hero-orb absolute -top-40 -left-32 h-[520px] w-[520px] rounded-full bg-emerald-500/20 blur-[120px] animate-float" />
+      <div className="hero-orb absolute -top-40 -left-32 h-[520px] w-[520px] rounded-full bg-emerald-500/20 blur-[80px]" />
       <div
-        className="hero-orb absolute top-40 -right-40 h-[480px] w-[480px] rounded-full bg-cyan-500/15 blur-[140px] animate-float"
+        className="hero-orb absolute top-40 -right-40 h-[480px] w-[480px] rounded-full bg-cyan-500/15 blur-[80px]"
         style={{ animationDelay: "-3s" }}
       />
       <div
-        className="hero-orb absolute bottom-0 left-1/2 -translate-x-1/2 h-[380px] w-[780px] rounded-full bg-emerald-500/10 blur-[120px]"
+        className="hero-orb absolute bottom-0 left-1/2 -translate-x-1/2 h-[380px] w-[780px] rounded-full bg-emerald-500/10 blur-[80px]"
       />
     </div>
   );
