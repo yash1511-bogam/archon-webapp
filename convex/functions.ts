@@ -1,4 +1,5 @@
 import { query, mutation, internalMutation, internalQuery } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
 
 async function sha256(input: string): Promise<string> {
@@ -6,18 +7,17 @@ async function sha256(input: string): Promise<string> {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-// Helper: get authenticated userId or throw
-async function requireUser(ctx: { auth: { getUserIdentity: () => Promise<{ subject: string } | null> } }) {
+async function requireUser(ctx: { auth: { getUserIdentity: () => Promise<{ subject: string; name?: string; email?: string } | null> } }) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) throw new Error("Not authenticated");
-  return identity.subject; // Clerk user ID
+  return identity;
 }
 
 // ── API Keys ──
 export const listApiKeys = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     return await ctx.db.query("apiKeys").withIndex("by_user", (q) => q.eq("userId", userId)).collect();
   },
 });
@@ -25,7 +25,8 @@ export const listApiKeys = query({
 export const createApiKey = mutation({
   args: { name: v.string(), scopes: v.array(v.string()), expiresAt: v.optional(v.number()) },
   handler: async (ctx, { name, scopes, expiresAt }) => {
-    const userId = await requireUser(ctx);
+    const identity = await requireUser(ctx);
+    const userId = identity.subject;
     const hex = (n: number) => Array.from({ length: n }, () => Math.floor(Math.random() * 16).toString(16)).join("");
     const plainKey = `arc_${hex(40)}`;
     const keyHash = await sha256(plainKey);
@@ -33,6 +34,12 @@ export const createApiKey = mutation({
       name, keyHash, prefix: plainKey.slice(0, 12), suffix: plainKey.slice(-4),
       status: "active", scopes, expiresAt, userId, lastUsed: Date.now(),
     });
+    if (identity.email) {
+      await ctx.scheduler.runAfter(0, internal.emails.send, {
+        type: "api-key-created", to: identity.email,
+        data: { name: identity.name ?? "there", keyName: name, prefix: plainKey.slice(0, 12), scopes },
+      });
+    }
     return { id, plainKey };
   },
 });
@@ -40,10 +47,17 @@ export const createApiKey = mutation({
 export const revokeApiKey = mutation({
   args: { id: v.id("apiKeys") },
   handler: async (ctx, { id }) => {
-    const userId = await requireUser(ctx);
+    const identity = await requireUser(ctx);
+    const userId = identity.subject;
     const key = await ctx.db.get(id);
     if (!key || key.userId !== userId) throw new Error("Not found");
     await ctx.db.patch(id, { status: "revoked" });
+    if (identity.email) {
+      await ctx.scheduler.runAfter(0, internal.emails.send, {
+        type: "api-key-revoked", to: identity.email,
+        data: { name: identity.name ?? "there", keyName: key.name, prefix: key.prefix },
+      });
+    }
   },
 });
 
@@ -51,7 +65,7 @@ export const revokeApiKey = mutation({
 export const getDashboardStats = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     const runs = await ctx.db.query("runs").withIndex("by_user", (q) => q.eq("userId", userId)).collect();
     if (!runs.length) return { totalRuns: 0, totalCost: 0, totalTokens: 0, avgLatency: 0 };
     return {
@@ -66,7 +80,7 @@ export const getDashboardStats = query({
 export const getUsageSeries = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     const runs = await ctx.db.query("runs").withIndex("by_user", (q) => q.eq("userId", userId)).collect();
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const ordered = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -79,7 +93,7 @@ export const getUsageSeries = query({
 export const getRecentRuns = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     return await ctx.db.query("runs").withIndex("by_user", (q) => q.eq("userId", userId)).order("desc").take(20);
   },
 });
@@ -87,7 +101,7 @@ export const getRecentRuns = query({
 export const getTopModels = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     const runs = await ctx.db.query("runs").withIndex("by_user", (q) => q.eq("userId", userId)).collect();
     const map = new Map<string, { model: string; runs: number; tokens: number; cost: number; latency: number }>();
     for (const r of runs) { const e = map.get(r.model) ?? { model: r.model, runs: 0, tokens: 0, cost: 0, latency: 0 }; e.runs++; e.tokens += r.tokens; e.cost += r.cost; e.latency += r.latency; map.set(r.model, e); }
@@ -99,7 +113,7 @@ export const getTopModels = query({
 export const getCostOverTime = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     const runs = await ctx.db.query("runs").withIndex("by_user", (q) => q.eq("userId", userId)).collect();
     const map = new Map<string, number>();
     for (let i = 29; i >= 0; i--) map.set(new Date(Date.now() - i * 86400000).toISOString().slice(0, 10), 0);
@@ -111,7 +125,7 @@ export const getCostOverTime = query({
 export const getModelDistribution = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     const runs = await ctx.db.query("runs").withIndex("by_user", (q) => q.eq("userId", userId)).collect();
     if (!runs.length) return [];
     const map = new Map<string, number>();
@@ -124,7 +138,7 @@ export const getModelDistribution = query({
 export const getTierBreakdown = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     const runs = await ctx.db.query("runs").withIndex("by_user", (q) => q.eq("userId", userId)).collect();
     const map = new Map([["simple", { runs: 0, cost: 0 }], ["standard", { runs: 0, cost: 0 }], ["complex", { runs: 0, cost: 0 }]]);
     for (const r of runs) { const e = map.get(r.tier) ?? { runs: 0, cost: 0 }; e.runs++; e.cost += r.cost; map.set(r.tier, e); }
@@ -136,7 +150,7 @@ export const getTierBreakdown = query({
 export const getAllRuns = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     return await ctx.db.query("runs").withIndex("by_user", (q) => q.eq("userId", userId)).order("desc").collect();
   },
 });
@@ -153,7 +167,7 @@ export const getRunSteps = query({
 export const getSettings = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     return await ctx.db.query("settings").withIndex("by_user", (q) => q.eq("userId", userId)).first();
   },
 });
@@ -161,17 +175,24 @@ export const getSettings = query({
 export const initSettings = mutation({
   args: { name: v.string(), email: v.string() },
   handler: async (ctx, { name, email }) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     const existing = await ctx.db.query("settings").withIndex("by_user", (q) => q.eq("userId", userId)).first();
     if (existing) return existing._id;
-    return await ctx.db.insert("settings", { userId, name, email, company: "", role: "admin", budgetAlerts: true, weeklyReports: true, failureSpikes: true, productUpdates: false, marketing: false });
+    const id = await ctx.db.insert("settings", { userId, name, email, company: "", role: "admin", budgetAlerts: true, weeklyReports: true, failureSpikes: true, productUpdates: false, marketing: false });
+    // Send welcome email on first sign-up
+    if (email) {
+      await ctx.scheduler.runAfter(0, internal.emails.send, {
+        type: "welcome", to: email, data: { name: name || "there" },
+      });
+    }
+    return id;
   },
 });
 
 export const updateSettings = mutation({
   args: { id: v.id("settings"), name: v.optional(v.string()), email: v.optional(v.string()), company: v.optional(v.string()), budgetAlerts: v.optional(v.boolean()), weeklyReports: v.optional(v.boolean()), failureSpikes: v.optional(v.boolean()), productUpdates: v.optional(v.boolean()), marketing: v.optional(v.boolean()) },
   handler: async (ctx, { id, ...fields }) => {
-    const userId = await requireUser(ctx);
+    const { subject: userId } = await requireUser(ctx);
     const doc = await ctx.db.get(id);
     if (!doc || doc.userId !== userId) throw new Error("Not found");
     const updates: Record<string, string | boolean> = {};
