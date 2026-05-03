@@ -22,10 +22,10 @@ const GROUPS = [
   {
     heading: "Company",
     links: [
-      { label: "Blog", href: "#" },
-      { label: "Changelog", href: "#" },
-      { label: "Security", href: "#" },
-      { label: "Contact", href: "mailto:hello@yashbogam.me" },
+      { label: "Blog", href: "/blog" },
+      { label: "Changelog", href: "/changelog" },
+      { label: "Security", href: "/security" },
+      { label: "Contact", href: "/contact" },
     ],
   },
 ];
@@ -83,9 +83,9 @@ export function Footer() {
             © {new Date().getFullYear()} Archon. Apache-2.0 License.
           </div>
           <div className="flex items-center gap-6 font-mono text-xs text-subtle">
-            <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-            <a href="mailto:hello@yashbogam.me" className="hover:text-foreground transition-colors">Support</a>
+            <a href="/terms" className="hover:text-foreground transition-colors">Terms</a>
+            <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
+            <a href="/contact" className="hover:text-foreground transition-colors">Support</a>
             <span className="opacity-40">•</span>
             <span>v1.0.0</span>
           </div>
