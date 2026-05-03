@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser, useClerk } from "@clerk/nextjs";
 import {
   LayoutDashboard,
   KeyRound,
@@ -116,23 +116,27 @@ export function Sidebar() {
 
         {/* User */}
         <div className="h-16 flex items-center px-4 border-t border-border">
-          <div className={cn("flex items-center gap-3 w-full", collapsed && "justify-center")}>
-            <UserButton
-              appearance={{
-                elements: { avatarBox: "h-8 w-8 ring-1 ring-white/10" },
-              }}
-            />
-            {!collapsed && (
-              <div className="flex flex-col min-w-0">
-                <span className="text-xs font-medium truncate">Signed in</span>
-                <span className="font-mono text-[10px] text-subtle truncate">
-                  role: admin
-                </span>
-              </div>
-            )}
-          </div>
+          <SidebarUser collapsed={collapsed} />
         </div>
       </div>
     </aside>
+  );
+}
+
+function SidebarUser({ collapsed }: { collapsed: boolean }) {
+  const { user } = useUser();
+  const { signOut } = useClerk();
+  return (
+    <div className={cn("flex items-center gap-3 w-full", collapsed && "justify-center")}>
+      <UserButton appearance={{ elements: { avatarBox: "h-8 w-8 ring-1 ring-white/10" } }} />
+      {!collapsed && (
+        <div className="flex flex-col min-w-0 flex-1">
+          <span className="text-xs font-medium truncate">{user?.fullName ?? user?.primaryEmailAddress?.emailAddress ?? "User"}</span>
+          <button onClick={() => signOut({ redirectUrl: "/" })} className="font-mono text-[10px] text-subtle hover:text-rose-400 transition-colors text-left truncate">
+            Sign out
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

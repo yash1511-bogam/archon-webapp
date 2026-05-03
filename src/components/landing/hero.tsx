@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -34,7 +34,6 @@ print(f"\${result.cost:.4f} / {result.step_count} steps")`;
 
 export function Hero() {
   const rootRef = useRef<HTMLElement>(null);
-  const ctaRef = useRef<HTMLAnchorElement>(null);
 
   useGSAP(
     () => {
@@ -93,31 +92,6 @@ export function Hero() {
           "-=0.9",
         );
 
-      // Magnetic CTA — quickTo for smooth follow
-      const btn = ctaRef.current;
-      if (btn) {
-        const xTo = gsap.quickTo(btn, "x", { duration: 0.6, ease: "power3" });
-        const yTo = gsap.quickTo(btn, "y", { duration: 0.6, ease: "power3" });
-        const handleMove = (e: MouseEvent) => {
-          const rect = btn.getBoundingClientRect();
-          const cx = rect.left + rect.width / 2;
-          const cy = rect.top + rect.height / 2;
-          const dx = (e.clientX - cx) * 0.3;
-          const dy = (e.clientY - cy) * 0.3;
-          xTo(dx);
-          yTo(dy);
-        };
-        const handleLeave = () => {
-          xTo(0);
-          yTo(0);
-        };
-        btn.addEventListener("mousemove", handleMove);
-        btn.addEventListener("mouseleave", handleLeave);
-        return () => {
-          btn.removeEventListener("mousemove", handleMove);
-          btn.removeEventListener("mouseleave", handleLeave);
-        };
-      }
     },
     { scope: rootRef },
   );
@@ -180,9 +154,8 @@ export function Hero() {
 
           <div className="hero-ctas mt-10 flex flex-col sm:flex-row items-center gap-3">
             <Link
-              ref={ctaRef}
-              href="/dashboard"
-              className="group relative inline-flex h-11 items-center gap-2 rounded-full bg-emerald-500 px-6 text-sm font-medium text-black shadow-[0_0_40px_-8px_rgba(16,185,129,0.7)] hover:bg-emerald-400 transition-colors"
+              href="/sign-up"
+              className="group inline-flex h-11 items-center gap-2 rounded-full bg-emerald-500 px-6 text-sm font-medium text-black shadow-[0_0_40px_-8px_rgba(16,185,129,0.7)] hover:bg-emerald-400 transition-colors"
             >
               Start building
               <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" strokeWidth={2.2} stroke="currentColor">
@@ -202,10 +175,9 @@ export function Hero() {
             </a>
           </div>
 
-          <div className="hero-ctas mt-6 flex items-center gap-6 font-mono text-xs text-subtle">
-            <Signal label="pip install archon-framework" />
-            <span className="hidden sm:inline opacity-50">•</span>
-            <Signal label="npm install @archon-ai/sdk" />
+          <div className="hero-ctas mt-6 flex flex-col sm:flex-row items-center gap-3 font-mono text-xs">
+            <CopyCommand text="pip install archon-framework" />
+            <CopyCommand text="npm install @archon-ai/sdk" />
           </div>
         </div>
 
@@ -218,12 +190,21 @@ export function Hero() {
   );
 }
 
-function Signal({ label }: { label: string }) {
+function CopyCommand({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch {}
+  };
   return (
-    <span className="inline-flex items-center gap-2">
-      <span className="h-1 w-1 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-      {label}
-    </span>
+    <button onClick={copy} className="inline-flex items-center gap-2.5 rounded-lg border border-border bg-white/[0.02] px-4 py-2 hover:border-emerald-500/30 hover:bg-white/[0.04] transition-all group">
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+      <code className="text-muted group-hover:text-foreground transition-colors">{text}</code>
+      {copied ? (
+        <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5 text-emerald-400" strokeWidth={2} stroke="currentColor"><path d="M3 8.5l3.5 3.5L13 4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      ) : (
+        <svg viewBox="0 0 16 16" fill="none" className="h-3.5 w-3.5 text-subtle group-hover:text-muted transition-colors" strokeWidth={1.8} stroke="currentColor"><rect x="5" y="5" width="8" height="8" rx="1.5" /><path d="M3 11V3a1.5 1.5 0 011.5-1.5H11" strokeLinecap="round" /></svg>
+      )}
+    </button>
   );
 }
 

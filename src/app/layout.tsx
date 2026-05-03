@@ -47,16 +47,21 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      signInForceRedirectUrl="/dashboard"
+      signUpForceRedirectUrl="/dashboard"
       appearance={{
         variables: {
           colorPrimary: "#10b981",
-          colorBackground: "#09090b",
-          colorInputBackground: "#0a0a0f",
-          colorInputText: "#fafafa",
-          colorText: "#fafafa",
-          colorTextSecondary: "#a1a1aa",
+          colorBackground: "#ffffff",
+          colorInputBackground: "#f4f4f5",
+          colorInputText: "#09090b",
+          colorText: "#09090b",
+          colorTextSecondary: "#71717a",
           borderRadius: "10px",
         },
+        elements: { card: "shadow-2xl" },
       }}
     >
       <html

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { Show, UserButton } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
@@ -64,17 +64,13 @@ export function Navbar() {
 
           <div className="flex items-center gap-2">
             <Show when="signed-out">
-              <SignInButton mode="redirect">
-                <button className="hidden sm:inline-flex h-9 items-center px-3.5 text-sm text-muted hover:text-foreground transition-colors">
-                  Sign in
-                </button>
-              </SignInButton>
-              <SignUpButton mode="redirect">
-                <button className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-emerald-500 px-3.5 text-sm font-medium text-black shadow-[0_0_24px_-8px_rgba(16,185,129,0.6)] hover:bg-emerald-400 transition-all hover:shadow-[0_0_32px_-4px_rgba(16,185,129,0.8)]">
-                  Get started
-                  <ArrowRight />
-                </button>
-              </SignUpButton>
+              <Link href="/sign-in" className="hidden sm:inline-flex h-9 items-center px-3.5 text-sm text-muted hover:text-foreground transition-colors">
+                Sign in
+              </Link>
+              <Link href="/sign-up" className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-emerald-500 px-3.5 text-sm font-medium text-black shadow-[0_0_24px_-8px_rgba(16,185,129,0.6)] hover:bg-emerald-400 transition-all">
+                Get started
+                <ArrowRight />
+              </Link>
             </Show>
             <Show when="signed-in">
               <Link
