@@ -9,10 +9,14 @@
     "lint": "eslint"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["@clerk/shared", "esbuild"]
+    "onlyBuiltDependencies": [
+      "@clerk/shared",
+      "esbuild"
+    ]
   },
   "dependencies": {
     "@clerk/nextjs": "^7.3.0",
+    "@clerk/themes": "^2.4.57",
     "@gsap/react": "2.1.2",
     "@react-email/components": "^1.0.12",
     "class-variance-authority": "^0.7.1",
