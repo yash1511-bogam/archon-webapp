@@ -8,7 +8,8 @@ export default function SignInPage() {
         forceRedirectUrl="/dashboard"
         appearance={{
           baseTheme: dark,
-          variables: { colorPrimary: "#10b981", colorBackground: "#0a0a0f", colorInputBackground: "#111118", colorInputText: "#fafafa", colorText: "#fafafa", colorTextSecondary: "#a1a1aa" },
+          variables: { colorPrimary: "#10b981", colorBackground: "#ffffff", colorInputBackground: "#f4f4f5", colorInputText: "#09090b", colorText: "#09090b", colorTextSecondary: "#71717a" },
+          elements: { card: "shadow-2xl border border-zinc-200" },
         }}
       />
     </div>
